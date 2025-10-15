@@ -6,7 +6,12 @@ import Lenis from 'lenis';
 const LenisProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // Check if browser supports smooth scrolling and Lenis
-    const browserInfo = (window as any).__browserInfo;
+    const browserInfo = (window as { __browserInfo?: {
+      isModernBrowser: boolean;
+      supportsRequestAnimationFrame: boolean;
+      isIE: boolean;
+      isSafari: boolean;
+    } }).__browserInfo;
     const shouldUseLenis = browserInfo?.isModernBrowser && browserInfo?.supportsRequestAnimationFrame && !browserInfo?.isIE;
 
     if (shouldUseLenis) {

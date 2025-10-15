@@ -20,7 +20,7 @@ interface BrowserInfo {
 }
 
 const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode }) => {
-  const [browserInfo, setBrowserInfo] = useState<BrowserInfo>({
+  const [, setBrowserInfo] = useState<BrowserInfo>({
     isWebGLSupported: false,
     isWebGL2Supported: false,
     isModernBrowser: false,
@@ -96,7 +96,7 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
       if (!gl2) document.body.classList.add('no-webgl2');
 
       // Store browser info for other components
-      (window as any).__browserInfo = info;
+      (window as { __browserInfo?: BrowserInfo }).__browserInfo = info;
 
       return info;
     };
@@ -106,10 +106,10 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
     // Polyfills for older browsers
     if (!info.supportsRequestAnimationFrame) {
       // Simple requestAnimationFrame polyfill
-      window.requestAnimationFrame = function(callback) {
-        return setTimeout(callback, 1000 / 60);
+      window.requestAnimationFrame = function(callback: FrameRequestCallback) {
+        return setTimeout(callback, 1000 / 60) as unknown as number;
       };
-      window.cancelAnimationFrame = function(id) {
+      window.cancelAnimationFrame = function(id: number) {
         clearTimeout(id);
       };
     }
@@ -118,7 +118,7 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
     if (!('scrollBehavior' in document.documentElement.style)) {
       // Try to load smoothscroll-polyfill
       try {
-        import('smoothscroll-polyfill').then((module: any) => {
+        import('smoothscroll-polyfill').then((module: { polyfill?: () => void }) => {
           if (module.polyfill) {
             module.polyfill();
           }
@@ -126,7 +126,7 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
           // Fallback smooth scroll implementation
           document.documentElement.style.scrollBehavior = 'smooth';
         });
-      } catch (error) {
+      } catch {
         // Fallback smooth scroll implementation
         document.documentElement.style.scrollBehavior = 'smooth';
       }
@@ -138,8 +138,8 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
         import('intersection-observer').catch(() => {
           console.warn('IntersectionObserver not supported and polyfill failed to load');
         });
-      } catch (error) {
-        console.warn('IntersectionObserver not supported:', error);
+      } catch {
+        console.warn('IntersectionObserver not supported');
       }
     }
 

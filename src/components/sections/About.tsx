@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import OptimizedVideo from '@/components/ui/optimized-video';
 
 const About = () => {
 
@@ -48,7 +49,7 @@ const About = () => {
 
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
               <p>
-                Hello! I'm Billynabil, a passionate motion graphics designer with
+                Hello! I&apos;m Billynabil, a passionate motion graphics designer with
                 a keen eye for detail and a love for bringing ideas to life through
                 animation and visual storytelling.
               </p>
@@ -72,13 +73,19 @@ const About = () => {
             className="flex justify-center items-center"
           >
             <div className="w-full max-w-md bg-black rounded-2xl shadow-2xl overflow-hidden">
-              <img
-                src="/Dance Evernight GIF.gif"
+              <OptimizedVideo
+                src="/dancing evernight.webm"
+                fallbackFormats={{
+                  webm: "/dancing evernight.webm",
+                  mp4: "/Dance Evernight GIF.gif"
+                }}
                 alt="Dance Evernight Motion Graphics"
                 className="w-full h-auto"
-                loop
-                autoPlay
-                playsInline
+                autoPlay={true}
+                loop={true}
+                muted={true}
+                playsInline={true}
+                controls={false}
               />
             </div>
           </motion.div>

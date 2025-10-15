@@ -1,47 +1,48 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import OptimizedImage from '@/components/ui/optimized-image';
 
 const adobeTools = [
   {
     name: 'AFTER EFFECTS',
-    type: 'text'
+    type: 'text' as const
   },
   {
     name: 'star',
-    type: 'icon',
+    type: 'icon' as const,
     icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
   },
   {
     name: 'PREMIERE PRO',
-    type: 'text'
+    type: 'text' as const
   },
   {
     name: 'star',
-    type: 'icon',
+    type: 'icon' as const,
     icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
   },
   {
     name: 'PHOTOSHOP',
-    type: 'text'
+    type: 'text' as const
   },
   {
     name: 'star',
-    type: 'icon',
+    type: 'icon' as const,
     icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
   },
   {
     name: 'ILLUSTRATOR',
-    type: 'text'
+    type: 'text' as const
   },
   {
     name: 'star',
-    type: 'icon',
+    type: 'icon' as const,
     icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
   },
 ];
 
-const LogoItem = ({ logo }: { logo: any }) => {
+const LogoItem = ({ logo }: { logo: { name: string; type: 'text' | 'icon'; icon?: string } }) => {
   return (
     <div className="flex items-center justify-center px-8">
       {logo.type === 'text' ? (
@@ -50,10 +51,12 @@ const LogoItem = ({ logo }: { logo: any }) => {
         </div>
       ) : (
         <div className="w-20 h-20 flex items-center justify-center">
-          <img
-            src={logo.icon}
+          <OptimizedImage
+            src={logo.icon!}
             alt={logo.name}
             className="w-full h-full object-contain"
+            width={80}
+            height={80}
           />
         </div>
       )}
@@ -61,7 +64,11 @@ const LogoItem = ({ logo }: { logo: any }) => {
   );
 };
 
-const Ribbon = ({ logos, direction, delay }: { logos: any[], direction: 'left' | 'right', delay?: number }) => {
+const Ribbon = ({ logos, direction, delay }: {
+  logos: { name: string; type: 'text' | 'icon'; icon?: string }[],
+  direction: 'left' | 'right',
+  delay?: number
+}) => {
   // Create many copies for completely seamless loop
   const duplicatedLogos = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
 

@@ -126,8 +126,13 @@ const OptimizedVideo = ({
   // Performance optimization based on device type
   const getVideoQuality = () => {
     const isMobile = window.innerWidth < 768;
-    const isSlowConnection = (navigator as any).connection?.effectiveType === 'slow-2g' ||
-                            (navigator as any).connection?.effectiveType === '2g';
+    const connection = (navigator as {
+      connection?: {
+        effectiveType?: string;
+      }
+    }).connection;
+    const isSlowConnection = connection?.effectiveType === 'slow-2g' ||
+                            connection?.effectiveType === '2g';
 
     if (isMobile || isSlowConnection) {
       return '480p';
@@ -191,6 +196,7 @@ const OptimizedVideo = ({
                 alt={alt}
                 className="w-full h-full object-cover"
                 loading="lazy"
+                decoding="async"
               />
             )}
           </motion.div>

@@ -1,10 +1,8 @@
 'use client';
 
-import Head from 'next/head';
-
 interface StructuredDataProps {
   type?: 'person' | 'website' | 'creative-work' | 'service';
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 const StructuredData = ({ type = 'person', data = {} }: StructuredDataProps) => {

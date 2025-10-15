@@ -1,16 +1,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import OptimizedImage from '@/components/ui/optimized-image';
 
 const socialLinks = [
   {
     name: 'Vgen',
     url: 'https://vgen.co/billynabil',
     icon: (
-      <img
+      <OptimizedImage
         src="/vgen-logo.png"
         alt="VGen"
         className="w-6 h-6"
+        width={24}
+        height={24}
       />
     ),
   },
@@ -58,12 +61,12 @@ const Contact = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Let's Create <span className="text-primary">Something</span>
+            Let&apos;s Create <span className="text-primary">Something</span>
           </h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full mb-8" />
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
             Ready to bring your ideas to life through motion graphics?
-            Let's collaborate and create something amazing together.
+            Let&apos;s collaborate and create something amazing together.
           </p>
         </motion.div>
 
@@ -81,7 +84,7 @@ const Contact = () => {
             </h3>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
               Whether you need a logo animation, explainer video, or custom motion graphics,
-              I'm here to help bring your vision to life.
+              I&apos;m here to help bring your vision to life.
             </p>
             <div className="flex justify-center items-center space-x-8">
               {socialLinks.map((social, index) => (
