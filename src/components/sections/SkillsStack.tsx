@@ -113,6 +113,8 @@ const SkillCard = ({ skill, index }: { skill: any; index: number }) => {
             duration: 0.6,
             repeat: isHovered ? Infinity : 0,
             repeatType: 'reverse',
+            ease: "easeInOut",
+            type: "tween"
           }}
         >
           <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">

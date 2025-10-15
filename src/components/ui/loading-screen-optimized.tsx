@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from 'next-themes';
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -12,7 +11,6 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -57,7 +55,7 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-background"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
         >
           
           {/* Main loading content */}
@@ -69,7 +67,7 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground italic"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-white italic"
               >
                 BILLYNABIL
               </motion.h1>
@@ -78,7 +76,7 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary italic"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-red-500 italic"
               >
                 COMMISSION
               </motion.h2>
@@ -88,7 +86,7 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto italic"
+                className="text-sm sm:text-base text-gray-400 max-w-md mx-auto italic"
               >
                 Motion Graphics Designer
               </motion.p>
@@ -101,9 +99,9 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
               transition={{ duration: 0.3, delay: 0.6 }}
               className="mt-8 max-w-xs mx-auto"
             >
-              <div className="h-1 bg-muted rounded-full overflow-hidden">
+              <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-primary rounded-full"
+                  className="h-full bg-red-500 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{
@@ -112,7 +110,7 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
                   }}
                 />
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">
+              <div className="mt-2 text-xs text-gray-400">
                 Loading... {Math.round(progress)}%
               </div>
             </motion.div>
@@ -122,7 +120,7 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="w-2 h-2 bg-primary rounded-full"
+                  className="w-2 h-2 bg-red-500 rounded-full"
                   style={{
                     animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite`,
                   }}

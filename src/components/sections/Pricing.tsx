@@ -1,284 +1,195 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import PressureText from '@/components/ui/pressure-text';
-import { Badge } from '@/components/ui/badge';
 
-const pricingData = [
+const pricingServices = [
   {
-    service: "Logo Animation",
-    description: "Professional logo reveal and branding animations",
-    startingPrice: "$150",
-    turnaround: "3-5 days",
-    features: ["Custom design", "HD resolution", "Sound effects", "Multiple formats"]
+    service: "Simple Music Video",
+    price: "$70",
+    description: "Basic music video with simple animations and effects",
+    features: ["Basic animations", "Standard transitions", "Text overlays", "HD quality"]
   },
   {
-    service: "Explainer Video",
-    description: "2D animated explainer videos for products/services",
-    startingPrice: "$500",
-    turnaround: "7-14 days",
-    features: ["Script writing", "Voiceover", "Background music", "Unlimited revisions"]
+    service: "Complex Music Video",
+    price: "$140",
+    description: "Advanced music video with complex animations and custom effects",
+    features: ["Advanced animations", "Custom effects", "Complex transitions", "4K quality", "Color grading"]
   },
   {
-    service: "Social Media Content",
-    description: "Animated posts and stories for social platforms",
-    startingPrice: "$100",
-    turnaround: "2-3 days",
-    features: ["Platform optimization", "Multiple sizes", "Brand consistency", "Quick delivery"]
+    service: "Stream Overlay (Static)",
+    price: "$15",
+    description: "Static overlay design for streaming platforms",
+    features: ["Custom design", "Brand integration", "Multiple resolutions", "Source files"]
   },
   {
-    service: "Event Graphics",
-    description: "Opening titles, transitions, and event visuals",
-    startingPrice: "$300",
-    turnaround: "5-7 days",
-    features: ["Custom branding", "Live integration", "Multiple formats", "Rehearsal support"]
+    service: "Stream Overlay (Animated)",
+    price: "$30",
+    description: "Animated overlay design for streaming platforms",
+    features: ["Animated elements", "Custom design", "Brand integration", "Multiple resolutions"]
   },
   {
-    service: "Motion Typography",
-    description: "Kinetic typography for music videos and presentations",
-    startingPrice: "$200",
-    turnaround: "4-6 days",
-    features: ["Font selection", "Timing sync", "Visual effects", "Color grading"]
+    service: "Stinger",
+    price: "$40",
+    description: "Animated transition for streaming",
+    features: ["Custom animation", "Sound design", "Brand integration", "Multiple formats"]
   },
   {
-    service: "Character Animation",
-    description: "2D character design and animation sequences",
-    startingPrice: "$400",
-    turnaround: "10-14 days",
-    features: ["Character design", "Rigging", "Animation", "Background design"]
+    service: "Trailer (Debut / Lore)",
+    price: "$50",
+    description: "Professional trailer for debut or lore videos",
+    features: ["Cinematic effects", "Text animations", "Sound design", "HD quality"]
   },
   {
-    service: "Video Editing",
-    description: "Professional video editing and post-production",
-    startingPrice: "$250",
-    turnaround: "3-5 days",
-    features: ["Color grading", "Audio mixing", "Effects", "Final delivery"]
-  },
-  {
-    service: "Custom Project",
-    description: "Tailored motion graphics solutions",
-    startingPrice: "Quote",
-    turnaround: "Varies",
-    features: ["Customized approach", "Dedicated support", "Flexible timeline", "Comprehensive service"]
+    service: "Animated Logo",
+    price: "$40",
+    description: "Professional logo animation for branding",
+    features: ["Custom animation", "Brand colors", "Multiple formats", "Source files"]
   }
 ];
 
+const ServiceCard = ({ service, index }: { service: typeof pricingServices[0]; index: number }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true }}
+      whileHover={{
+        y: -5,
+        transition: { duration: 0.3 }
+      }}
+      className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-lg hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+    >
+      {/* Service Header */}
+      <div className="flex justify-between items-start mb-4">
+        <motion.h3
+          className="text-xl font-bold text-white"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
+        >
+          {service.service}
+        </motion.h3>
+        <motion.div
+          className="bg-black text-white px-3 py-1 rounded-full text-sm font-bold border border-white/20"
+          whileHover={{
+            scale: 1.1,
+            rotate: [0, -5, 5, 0]
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          {service.price}
+        </motion.div>
+      </div>
+
+      {/* Description */}
+      <p className="text-gray-400 mb-4 text-sm">
+        {service.description}
+      </p>
+
+      {/* Features */}
+      <div className="space-y-2">
+        {service.features.map((feature, featureIndex) => (
+          <motion.div
+            key={featureIndex}
+            className="flex items-center"
+            initial={{ opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: (index * 0.1) + (featureIndex * 0.05) }}
+            viewport={{ once: true }}
+          >
+            <svg className="w-4 h-4 text-white mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span className="text-gray-300 text-sm">{feature}</span>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Contact Button */}
+      <motion.button
+        className="w-full mt-4 py-2 px-4 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300"
+        whileHover={{
+          scale: 1.02,
+          transition: { duration: 0.2 }
+        }}
+        whileTap={{ scale: 0.98 }}
+      >
+        Order Now
+      </motion.button>
+    </motion.div>
+  );
+};
+
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+    <section id="pricing" className="py-24 min-h-screen relative overflow-hidden bg-black">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-black">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
+      </div>
+
+      {/* Floating background elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-40 right-20 w-40 h-40 bg-white/3 rounded-full blur-3xl animate-pulse delay-1000" />
+      <div className="absolute bottom-20 left-1/3 w-36 h-36 bg-white/4 rounded-full blur-3xl animate-pulse delay-2000" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <PressureText
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4"
-            delay={0.2}
-            intensity={1.25}
-          >
-            <span className="text-primary">PRICING</span> & SERVICES
-          </PressureText>
-          
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8">
-            Transparent pricing for professional motion graphics services.
-            Contact me for custom projects and bulk pricing.
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6">
+            Pricing
+          </h2>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            Professional motion graphics services at competitive prices
           </p>
-          <Badge variant="outline" className="text-xs sm:text-sm">
-            All prices are starting points and may vary based on project complexity
-          </Badge>
         </motion.div>
 
-        {/* Pricing Table */}
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          {pricingServices.map((service, index) => (
+            <ServiceCard key={service.service} service={service} index={index} />
+          ))}
+        </div>
+
+        {/* Disclaimer */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
-          className="bg-card rounded-lg border overflow-hidden"
+          className="text-center"
         >
-          {/* Desktop Table */}
-          <div className="hidden lg:block overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-muted/50">
-                  <th className="w-[25%] font-semibold text-left p-4">Service</th>
-                  <th className="w-[30%] font-semibold text-left p-4">Description</th>
-                  <th className="w-[15%] font-semibold text-left p-4">Starting Price</th>
-                  <th className="w-[15%] font-semibold text-left p-4">Turnaround</th>
-                  <th className="w-[15%] font-semibold text-left p-4">Features</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pricingData.map((item, index) => (
-                  <motion.tr
-                    key={item.service}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    whileHover={{
-                      scale: 1.02,
-                      backgroundColor: "rgba(var(--muted) / 0.5)",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
-                    }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.1
-                    }}
-                    viewport={{ once: true }}
-                    className="border-b cursor-pointer transition-all duration-200"
-                  >
-                    <td className="font-medium p-4">
-                      <div>
-                        <motion.p
-                          className="font-semibold text-lg"
-                          whileHover={{ scale: 1.05, color: "rgb(var(--primary))" }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {item.service}
-                        </motion.p>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <motion.p
-                        className="text-sm text-muted-foreground"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {item.description}
-                      </motion.p>
-                    </td>
-                    <td className="p-4">
-                      <motion.span
-                        className="font-bold text-primary text-lg inline-block"
-                        whileHover={{
-                          scale: 1.1,
-                          rotate: [0, -5, 5, 0],
-                          textShadow: "0 0 20px rgba(var(--primary), 0.5)"
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {item.startingPrice}
-                      </motion.span>
-                    </td>
-                    <td className="p-4">
-                      <motion.div
-                        whileHover={{
-                          scale: 1.05,
-                          rotate: [0, -2, 2, 0]
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <Badge variant="secondary" className="text-sm px-3 py-1">
-                          {item.turnaround}
-                        </Badge>
-                      </motion.div>
-                    </td>
-                    <td className="p-4">
-                      <div className="space-y-1">
-                        {item.features.slice(0, 2).map((feature, i) => (
-                          <div key={i} className="flex items-center text-xs text-muted-foreground">
-                            <div className="w-1 h-1 bg-primary rounded-full mr-2" />
-                            {feature}
-                          </div>
-                        ))}
-                        {item.features.length > 2 && (
-                          <span className="text-xs text-muted-foreground">
-                            +{item.features.length - 2} more
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile Cards */}
-          <div className="lg:hidden p-4 sm:p-6 space-y-4 sm:space-y-6">
-            {pricingData.map((item, index) => (
-              <motion.div
-                key={item.service}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{
-                  scale: 1.02,
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.15)"
-                }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.1
-                }}
-                viewport={{ once: true }}
-                className="bg-card border rounded-lg p-4 sm:p-6 cursor-pointer transition-all duration-200"
-              >
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex justify-between items-start">
-                    <motion.h3
-                      className="text-lg sm:text-xl font-bold text-foreground"
-                      whileHover={{ scale: 1.05, color: "rgb(var(--primary))" }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {item.service}
-                    </motion.h3>
-                    <motion.div
-                      whileHover={{
-                        scale: 1.1,
-                        rotate: [0, -5, 5, 0]
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <span className="text-xl sm:text-2xl font-bold text-primary">
-                        {item.startingPrice}
-                      </span>
-                    </motion.div>
-                  </div>
-
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    {item.description}
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <motion.div
-                      whileHover={{
-                        scale: 1.05,
-                        rotate: [0, -2, 2, 0]
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Badge variant="secondary" className="text-sm px-3 py-1">
-                        {item.turnaround}
-                      </Badge>
-                    </motion.div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground">Features:</p>
-                    <div className="space-y-1">
-                      {item.features.map((feature, i) => (
-                        <div key={i} className="flex items-center text-xs sm:text-sm text-muted-foreground">
-                          <div className="w-1 h-1 bg-primary rounded-full mr-2" />
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          <p className="text-gray-500 mb-4">
+            <em>Prices are starting rates and may vary based on project complexity</em>
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+            <div className="flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Quality guaranteed
+            </div>
+            <div className="flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              Fast delivery
+            </div>
+            <div className="flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+              </svg>
+              Custom support
+            </div>
           </div>
         </motion.div>
-
-        {/* Call to Action */}
-        
-          
-        
-
-        </div>
+      </div>
     </section>
   );
 };

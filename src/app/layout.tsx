@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import LenisProvider from "@/components/providers/LenisProvider";
 import { AppProviders } from "@/components/providers/AppProviders";
 import "./globals.css";
@@ -69,22 +68,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark">
       <body
-        className={`${poppins.variable} antialiased`}
+        className={`${poppins.variable} antialiased bg-black text-white`}
+        suppressHydrationWarning={true}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AppProviders>
-            <LenisProvider>
-              {children}
-            </LenisProvider>
-          </AppProviders>
-        </ThemeProvider>
+        <AppProviders>
+          <LenisProvider>
+            {children}
+          </LenisProvider>
+        </AppProviders>
       </body>
     </html>
   );

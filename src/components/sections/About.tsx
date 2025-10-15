@@ -1,23 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Animated3DObject from './Animated3DObject';
-import AnimatedShaderBackground from '@/components/ui/animated-shader-background';
 
 const About = () => {
 
   return (
-    <section id="about" className="py-4 bg-background relative overflow-hidden">
+    <section id="about" className="py-4 pb-16 md:pb-24 lg:pb-32 bg-background relative overflow-hidden">
       {/* ===== TOP GRADIENT FOR SMOOTH TRANSITION ===== */}
       <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-background via-background/95 to-transparent z-10" />
 
       {/* ===== ADDITIONAL TOP OVERLAY ===== */}
       <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-background via-background/20 to-transparent z-10" />
 
-      <div className="absolute inset-0 z-0">
-        <AnimatedShaderBackground />
-      </div>
-
+  
       {/* ===== BORDER CORNERS ===== */}
       <div className="absolute top-50 left-12 w-12 h-12 border-t-2 border-l-2 border-primary/50 z-20" />
       <div className="absolute top-50 right-12 w-12 h-12 border-t-2 border-r-2 border-primary/50 z-20" />
@@ -68,7 +63,7 @@ const About = () => {
 
             </motion.div>
 
-          {/* Right Column - 3D Object */}
+          {/* Right Column - Local GIF Showcase */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -76,7 +71,16 @@ const About = () => {
             viewport={{ once: true }}
             className="flex justify-center items-center"
           >
-            <Animated3DObject />
+            <div className="w-full max-w-md bg-black rounded-2xl shadow-2xl overflow-hidden">
+              <img
+                src="/Dance Evernight GIF.gif"
+                alt="Dance Evernight Motion Graphics"
+                className="w-full h-auto"
+                loop
+                autoPlay
+                playsInline
+              />
+            </div>
           </motion.div>
         </div>
       </div>

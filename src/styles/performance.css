@@ -45,6 +45,10 @@
 
 /* Optimized GPU acceleration hints */
 .gpu-accelerated {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
   transform: translateZ(0);
   /* Only use will-change when necessary */
 }
@@ -57,12 +61,17 @@
 /* Contain for better performance */
 .performance-optimized {
   contain: layout style paint;
+  /* Fallback for browsers that don't support contain */
+  will-change: contents;
 }
 
 /* Optimize loading screen */
 .loading-screen {
   contain: strict;
   will-change: auto;
+  /* Fallback for browsers that don't support contain */
+  position: relative;
+  z-index: 9999;
 }
 
 /* Reduce motion for better performance */
@@ -75,15 +84,27 @@
 
 /* Optimized hover states */
 .hover-lift {
+  -webkit-transition: -webkit-transform var(--transition-normal) var(--animation-easing);
+  -moz-transition: -moz-transform var(--transition-normal) var(--animation-easing);
+  -ms-transition: -ms-transform var(--transition-normal) var(--animation-easing);
+  -o-transition: -o-transform var(--transition-normal) var(--animation-easing);
   transition: transform var(--transition-normal) var(--animation-easing);
 }
 
 .hover-lift:hover {
+  -webkit-transform: translateY(-2px) translateZ(0);
+  -moz-transform: translateY(-2px) translateZ(0);
+  -ms-transform: translateY(-2px) translateZ(0);
+  -o-transform: translateY(-2px) translateZ(0);
   transform: translateY(-2px) translateZ(0);
 }
 
 /* Reduced GPU transforms for mobile */
 .device-mobile .hover-lift:hover {
+  -webkit-transform: translateY(-1px);
+  -moz-transform: translateY(-1px);
+  -ms-transform: translateY(-1px);
+  -o-transform: translateY(-1px);
   transform: translateY(-1px);
 }
 
@@ -200,5 +221,161 @@
 
   .no-print {
     display: none !important;
+  }
+}
+
+/* Browser-specific performance hacks */
+
+/* Safari performance optimizations */
+.safari .gpu-accelerated {
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+}
+
+.safari .smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+.safari .performance-heavy {
+  -webkit-animation: none !important;
+  animation: none !important;
+}
+
+/* Firefox performance optimizations */
+.firefox .gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.firefox .loading-skeleton {
+  animation: none;
+  background: linear-gradient(90deg,
+    rgba(156, 163, 175, 0.1) 25%,
+    rgba(156, 163, 175, 0.3) 50%,
+    rgba(156, 163, 175, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-firefox 1.5s infinite;
+}
+
+@keyframes shimmer-firefox {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Edge and IE performance optimizations */
+.ie .gpu-accelerated {
+  transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+}
+
+.ie .performance-heavy {
+  display: none;
+}
+
+.ie .interactive-button {
+  transition: none;
+}
+
+.ie .hover-lift:hover {
+  transform: none;
+}
+
+.edge .gpu-accelerated {
+  transform: translateZ(0);
+  -ms-transform: translateZ(0);
+}
+
+/* Chrome performance optimizations */
+.chrome .gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.chrome .performance-optimized {
+  contain: layout style paint;
+}
+
+/* Mobile browser optimizations */
+.touch-device .hover-lift:hover {
+  transform: none;
+}
+
+.touch-device .interactive-button::before {
+  display: none;
+}
+
+.touch-device .performance-heavy {
+  animation-duration: 0.3s !important;
+}
+
+/* Low-end device detection and optimizations */
+@media (max-width: 768px) {
+  .gpu-accelerated {
+    transform: none;
+    will-change: auto;
+  }
+
+  .performance-heavy {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .loading-skeleton {
+    animation: none;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .gpu-accelerated {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .optimized-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Memory optimization for large elements */
+.performance-heavy {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+.memory-optimized {
+  contain: strict;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Fallback for browsers that don't support CSS custom properties */
+@supports not (--custom: property) {
+  .performance-optimized {
+    transition: all 0.3s ease;
+    transform: translateZ(0);
+  }
+
+  .hover-lift {
+    transition: transform 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
   }
 }
