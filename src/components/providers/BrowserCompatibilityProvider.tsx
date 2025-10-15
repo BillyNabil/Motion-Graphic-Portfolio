@@ -120,16 +120,7 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
       (document.documentElement.style as CSSStyleDeclaration).scrollBehavior = 'smooth';
     }
 
-    // Add IntersectionObserver polyfill for older browsers
-    if (!info.supportsIntersectionObserver) {
-      try {
-        import('intersection-observer').catch(() => {
-          console.warn('IntersectionObserver not supported and polyfill failed to load');
-        });
-      } catch {
-        console.warn('IntersectionObserver not supported');
-      }
-    }
+    // IntersectionObserver polyfill not needed - fallback implemented natively
 
     // Performance optimizations based on browser
     if (info.isSafari) {
