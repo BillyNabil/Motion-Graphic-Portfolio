@@ -46,7 +46,14 @@ const skills = [
   },
 ];
 
-const SkillCard = ({ skill, index }: { skill: any; index: number }) => {
+const SkillCard = ({ skill, index }: {
+  skill: {
+    name: string;
+    icon: string;
+    iconDark: string;
+  };
+  index: number;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
