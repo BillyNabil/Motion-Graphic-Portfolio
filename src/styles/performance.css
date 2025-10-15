@@ -1,0 +1,204 @@
+/* Performance-optimized animations and transitions */
+
+/* Base animation variables */
+:root {
+  --animation-duration: 0.5s;
+  --animation-stagger: 0.08s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animation-duration: 0.1s;
+    --animation-stagger: 0.01s;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Performance optimizations for different devices */
+.device-mobile {
+  --animation-duration: 0.3s;
+  --animation-stagger: 0.05s;
+}
+
+.device-tablet {
+  --animation-duration: 0.5s;
+  --animation-stagger: 0.08s;
+}
+
+.device-desktop {
+  --animation-duration: 0.8s;
+  --animation-stagger: 0.1s;
+}
+
+/* Optimized GPU acceleration hints */
+.gpu-accelerated {
+  transform: translateZ(0);
+  /* Only use will-change when necessary */
+}
+
+.reduce-motion .gpu-accelerated {
+  transform: none;
+  will-change: auto;
+}
+
+/* Contain for better performance */
+.performance-optimized {
+  contain: layout style paint;
+}
+
+/* Optimize loading screen */
+.loading-screen {
+  contain: strict;
+  will-change: auto;
+}
+
+/* Reduce motion for better performance */
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
+  .performance-heavy {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Optimized hover states */
+.hover-lift {
+  transition: transform var(--transition-normal) var(--animation-easing);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* Reduced GPU transforms for mobile */
+.device-mobile .hover-lift:hover {
+  transform: translateY(-1px);
+}
+
+/* Smooth scrolling optimization */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  overflow-scrolling: touch;
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg,
+    rgba(var(--muted) / 0.1) 25%,
+    rgba(var(--muted) / 0.3) 50%,
+    rgba(var(--muted) / 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Focus visible optimizations */
+.focus-visible-outline:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Container queries for responsive design */
+@container (max-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container (min-width: 641px) and (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 1025px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Image optimization */
+.optimized-image {
+  content-visibility: auto;
+  contain-intrinsic-size: 400px 300px;
+}
+
+/* Text optimization */
+.optimize-text {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Button interaction improvements */
+.interactive-button {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal) var(--animation-easing);
+}
+
+.interactive-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width var(--transition-normal), height var(--transition-normal);
+}
+
+.interactive-button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Performance monitoring class */
+.performance-logging {
+  --performance-warning: 30;
+  --performance-good: 60;
+}
+
+/* Reduce animation performance class */
+.reduce-motion .pressure-word,
+.reduce-motion .hover-card,
+.reduce-motion .interactive-button {
+  animation: none !important;
+  transition: transform var(--transition-fast) !important;
+}
+
+/* Print styles */
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
