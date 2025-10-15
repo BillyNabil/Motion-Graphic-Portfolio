@@ -235,7 +235,7 @@ const Hero = () => {
           <motion.div
             whileHover={{ scale: 1.1, rotate: [0, -1, 1, 0] }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17, ease: "easeInOut", type: "tween" }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <Button
               size="lg"      // Large button size
@@ -251,7 +251,7 @@ const Hero = () => {
           <motion.div
             whileHover={{ scale: 1.1, rotate: [0, 1, -1, 0] }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17, ease: "easeInOut", type: "tween" }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <Button
               variant="outline" // Outline style (transparent with border)
