@@ -82,8 +82,9 @@ const OptimizedVideo = ({
     );
 
     if (selectedFormat) {
-      if (fallbackFormats?.[selectedFormat as keyof typeof fallbackFormats]) {
-        setCurrentSource(fallbackFormats[selectedFormat as keyof typeof fallbackFormats]);
+      const fallbackSource = fallbackFormats?.[selectedFormat as keyof typeof fallbackFormats];
+      if (fallbackSource) {
+        setCurrentSource(fallbackSource);
       } else {
         setCurrentSource(src);
       }
