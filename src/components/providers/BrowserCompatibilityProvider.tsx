@@ -116,20 +116,8 @@ const BrowserCompatibilityProvider = ({ children }: { children: React.ReactNode 
 
     // Add smooth scroll polyfill for older browsers
     if (!('scrollBehavior' in document.documentElement.style)) {
-      // Try to load smoothscroll-polyfill
-      try {
-        import('smoothscroll-polyfill').then((module: { polyfill?: () => void }) => {
-          if (module.polyfill) {
-            module.polyfill();
-          }
-        }).catch(() => {
-          // Fallback smooth scroll implementation
-          document.documentElement.style.scrollBehavior = 'smooth';
-        });
-      } catch {
-        // Fallback smooth scroll implementation
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }
+      // Fallback smooth scroll implementation
+      document.documentElement.style.scrollBehavior = 'smooth';
     }
 
     // Add IntersectionObserver polyfill for older browsers
