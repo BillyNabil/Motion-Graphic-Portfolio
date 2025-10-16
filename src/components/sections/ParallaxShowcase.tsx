@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const ParallaxShowcase = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<any>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [imageKey, setImageKey] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 

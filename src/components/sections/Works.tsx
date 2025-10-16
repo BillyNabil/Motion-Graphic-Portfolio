@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Play, X } from 'lucide-react';
+import { Play } from 'lucide-react';
 import SectionObserver from '@/components/ui/SectionObserver';
 import Image from 'next/image';
 
