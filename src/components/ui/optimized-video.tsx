@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface OptimizedVideoProps {
   src: string;
@@ -192,10 +193,11 @@ const OptimizedVideo = ({
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
             {generatePosterUrl() && (
-              <img
-                src={generatePosterUrl()}
+              <Image
+                src={generatePosterUrl()!}
                 alt={alt}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
                 loading="lazy"
                 decoding="async"
               />

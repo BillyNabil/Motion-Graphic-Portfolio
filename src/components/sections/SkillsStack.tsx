@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const skills = [
   {
@@ -125,9 +126,11 @@ const SkillCard = ({ skill, index }: {
           }}
         >
           <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
-            <img
+            <Image
               src={skill.icon}
               alt={skill.name}
+              width={80}
+              height={80}
               className="w-full h-full object-contain filter drop-shadow-lg"
               style={{
                 filter: 'drop-shadow(0 0 20px rgba(168, 85, 247, 0.4))',
