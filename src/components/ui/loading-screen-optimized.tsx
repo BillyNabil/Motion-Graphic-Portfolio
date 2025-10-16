@@ -27,19 +27,16 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
     let currentStep = 0;
     const timer = setInterval(() => {
       currentStep++;
-      setProgress((prev) => {
-        const newProgress = Math.min(100, currentStep * increment);
-        if (newProgress >= 100) {
-          clearInterval(timer);
-          // Reduced delay before hiding
-          setTimeout(() => {
-            setIsLoading(false);
-            onComplete?.();
-          }, 200);
-          return 100;
-        }
-        return newProgress;
-      });
+      const newProgress = Math.min(100, currentStep * increment);
+      setProgress(newProgress);
+      if (newProgress >= 100) {
+        clearInterval(timer);
+        // Reduced delay before hiding
+        setTimeout(() => {
+          setIsLoading(false);
+          onComplete?.();
+        }, 200);
+      }
     }, duration / steps);
 
     return () => clearInterval(timer);

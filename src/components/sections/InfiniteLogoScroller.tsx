@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import OptimizedImage from '@/components/ui/optimized-image';
+import { useEffect, useState } from 'react';
 
 const adobeTools = [
   {
@@ -42,21 +43,21 @@ const adobeTools = [
   },
 ];
 
-const LogoItem = ({ logo }: { logo: { name: string; type: 'text' | 'icon'; icon?: string } }) => {
+const LogoItem = ({ logo, isMobile }: { logo: { name: string; type: 'text' | 'icon'; icon?: string }, isMobile: boolean }) => {
   return (
     <div className="flex items-center justify-center px-8">
       {logo.type === 'text' ? (
-        <div className="text-black font-black text-6xl whitespace-nowrap">
+        <div className={`text-black font-black whitespace-nowrap ${isMobile ? 'text-2xl' : 'text-6xl'}`}>
           {logo.name}
         </div>
       ) : (
-        <div className="w-20 h-20 flex items-center justify-center">
+        <div className={`flex items-center justify-center ${isMobile ? 'w-12 h-12' : 'w-20 h-20'}`}>
           <OptimizedImage
             src={logo.icon!}
             alt={logo.name}
             className="w-full h-full object-contain"
-            width={80}
-            height={80}
+            width={isMobile ? 48 : 80}
+            height={isMobile ? 48 : 80}
           />
         </div>
       )}
@@ -64,10 +65,11 @@ const LogoItem = ({ logo }: { logo: { name: string; type: 'text' | 'icon'; icon?
   );
 };
 
-const Ribbon = ({ logos, direction, delay }: {
+const Ribbon = ({ logos, direction, delay, isMobile }: {
   logos: { name: string; type: 'text' | 'icon'; icon?: string }[],
   direction: 'left' | 'right',
-  delay?: number
+  delay?: number,
+  isMobile: boolean
 }) => {
   // Create many copies for completely seamless loop
   const duplicatedLogos = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
@@ -77,27 +79,40 @@ const Ribbon = ({ logos, direction, delay }: {
       className="flex items-center"
       animate={{
         x: direction === 'left'
-          ? [0, -(logos.length * 200)] // 200px per item for large text with padding
-          : [-(logos.length * 200), 0],
+          ? [0, -(logos.length * (isMobile ? 100 : 200))] // Adjust spacing for mobile
+          : [-(logos.length * (isMobile ? 100 : 200)), 0],
       }}
       transition={{
         x: {
           repeat: Infinity,
           repeatType: "loop",
-          duration: 20, // Smooth, not too fast
+          duration: isMobile ? 15 : 20, // Faster animation on mobile
           ease: "linear",
           delay: delay || 0,
         },
       }}
     >
       {duplicatedLogos.map((logo, index) => (
-        <LogoItem key={`${logo.name}-${index}`} logo={logo} />
+        <LogoItem key={`${logo.name}-${index}`} logo={logo} isMobile={isMobile} />
       ))}
     </motion.div>
   );
 };
 
 const InfiniteLogoScroller = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section id="skills" className="bg-black py-20 relative overflow-hidden">
       {/* Section Header */}
@@ -112,30 +127,47 @@ const InfiniteLogoScroller = () => {
         </h2>
       </motion.div>
 
-      {/* X-Shaped Ribbons Container */}
-      <div className="relative w-full h-96 flex items-center justify-center">
-        {/* First Ribbon - Diagonal from top-left to bottom-right */}
-        <div className="absolute w-full h-32 bg-white flex items-center overflow-hidden shadow-2xl"
-             style={{
-               transform: 'rotate(-25deg) translateY(-100px)',
-               transformOrigin: 'center',
-               width: '200%',
-               left: '-50%'
-             }}>
-          <Ribbon logos={adobeTools} direction="left" />
-        </div>
+      {/* X-Shaped Ribbons Container - Desktop */}
+      {!isMobile && (
+        <div className="relative w-full h-96 flex items-center justify-center">
+          {/* First Ribbon - Diagonal from top-left to bottom-right */}
+          <div className="absolute w-full h-32 bg-white flex items-center overflow-hidden shadow-2xl"
+               style={{
+                 transform: 'rotate(-25deg) translateY(-100px)',
+                 transformOrigin: 'center',
+                 width: '200%',
+                 left: '-50%'
+               }}>
+            <Ribbon logos={adobeTools} direction="left" isMobile={false} />
+          </div>
 
-        {/* Second Ribbon - Diagonal from top-right to bottom-left */}
-        <div className="absolute w-full h-32 bg-white flex items-center overflow-hidden shadow-2xl"
-             style={{
-               transform: 'rotate(25deg) translateY(100px)',
-               transformOrigin: 'center',
-               width: '200%',
-               left: '-50%'
-             }}>
-          <Ribbon logos={adobeTools} direction="right" delay={0.5} />
+          {/* Second Ribbon - Diagonal from top-right to bottom-left */}
+          <div className="absolute w-full h-32 bg-white flex items-center overflow-hidden shadow-2xl"
+               style={{
+                 transform: 'rotate(25deg) translateY(100px)',
+                 transformOrigin: 'center',
+                 width: '200%',
+                 left: '-50%'
+               }}>
+            <Ribbon logos={adobeTools} direction="right" delay={0.5} isMobile={false} />
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Horizontal Ribbons Container - Mobile */}
+      {isMobile && (
+        <div className="relative w-full flex flex-col gap-8 px-4">
+          {/* First Ribbon - Horizontal */}
+          <div className="w-full h-16 bg-white flex items-center overflow-hidden shadow-xl rounded-lg">
+            <Ribbon logos={adobeTools} direction="left" isMobile={true} />
+          </div>
+
+          {/* Second Ribbon - Horizontal */}
+          <div className="w-full h-16 bg-white flex items-center overflow-hidden shadow-xl rounded-lg">
+            <Ribbon logos={adobeTools} direction="right" delay={0.5} isMobile={true} />
+          </div>
+        </div>
+      )}
 
       {/* Gradient Masks for fade effect at edges */}
       <div className="absolute inset-0 z-10 pointer-events-none">

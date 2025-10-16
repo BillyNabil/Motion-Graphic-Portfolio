@@ -2,11 +2,24 @@
 
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const ParallaxShowcase = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const imgRef = useRef<any>(null);
   const [imageKey, setImageKey] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -18,8 +31,9 @@ const ParallaxShowcase = () => {
     margin: '-10% 0px -10% 0px'
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  // Disable parallax on mobile
+  const y = useTransform(scrollYProgress, [0, 1], isMobile ? ["0%", "0%"] : ["0%", "50%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], isMobile ? [1, 1] : [1, 1.2]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   // Restart GIF when section comes into view
@@ -31,7 +45,7 @@ const ParallaxShowcase = () => {
   }, [isInView]);
 
   return (
-    <section ref={ref} className="relative min-h-screen bg-black overflow-hidden">
+    <section ref={ref} className={`relative min-h-screen bg-black overflow-hidden ${isMobile ? 'hidden' : 'block'}`}>
       {/* Full Screen Image Container with Parallax */}
       <motion.div
         initial={{ opacity: 0, scale: 1.1 }}
@@ -41,13 +55,16 @@ const ParallaxShowcase = () => {
         className="absolute inset-0 w-full h-full"
       >
         {/* Main Image - Full Section */}
-        <img
+        <Image
           key={imageKey}
           ref={imgRef}
-          src={`/Comp_2.gif?t=${imageKey}`} // Add timestamp to prevent caching
+          src={`/comp 2.webp?t=${imageKey}`} // Add timestamp to prevent caching
           alt="Showcase Animation"
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
           style={{ minHeight: '100vh' }}
+          sizes="100vw"
+          priority
         />
 
         {/* Optional overlay effect that changes with scroll */}

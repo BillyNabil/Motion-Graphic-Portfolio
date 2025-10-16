@@ -1,7 +1,7 @@
 'use client'; // This directive tells Next.js to render this component on the client-side
 
 // Import React hooks for managing references and side effects
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // Import Framer Motion for smooth animations
 import { motion } from 'framer-motion';
 // Import the custom Button component from our UI library
@@ -12,12 +12,17 @@ import TextPressure from '@/components/ui/text-pressure';
 import { gsap } from 'gsap';
 // Import ScrollTrigger plugin for scroll-based animations
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+// Import SectionObserver for detecting active section
+import SectionObserver from '@/components/ui/SectionObserver';
 
 // Register the ScrollTrigger plugin with GSAP
 gsap.registerPlugin(ScrollTrigger);
 
 // Main Hero component - This is the first section users see when visiting the portfolio
 const Hero = () => {
+  // State to detect mobile screen size
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
   // Create references to DOM elements that we want to animate
   // useRef lets us directly access and manipulate DOM elements
   const headingRef = useRef<HTMLHeadingElement>(null); // Reference to the main heading
@@ -25,11 +30,26 @@ const Hero = () => {
   const subheadingRef = useRef<HTMLParagraphElement>(null); // Reference to the subtitle
   const ctaRef = useRef<HTMLDivElement>(null); // Reference to the call-to-action buttons
 
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // useEffect hook runs after component mounts - perfect for animations
   useEffect(() => {
     // Simplified animation for subheading and CTA only
-    // Title animations are handled by PressureText component
+    // Title animations are handled by PressureText component (desktop) or Framer Motion (mobile)
     const ctx = gsap.context(() => {
+      // Calculate delay based on device
+      const subheadingDelay = isMobile ? 1.3 : 1.2;
+      const ctaDelay = isMobile ? 1.8 : 1.8;
+
       // ===== SUBHEADING ANIMATION =====
       // Animate the subtitle text to slide up and fade in
       gsap.fromTo(subheadingRef.current,
@@ -41,7 +61,7 @@ const Hero = () => {
           opacity: 1,    // Fully visible
           y: 0,         // Final position
           duration: 1,   // 1 second animation
-          delay: 1.2,    // Reduced delay to sync with PressureText
+          delay: subheadingDelay,    // Adjusted delay based on device
           ease: "power3.out" // Smooth easing function
         }
       );
@@ -57,7 +77,7 @@ const Hero = () => {
           opacity: 1,    // Fully visible
           scale: 1,      // Full size (100%)
           duration: 0.8, // 0.8 second animation
-          delay: 1.8,    // Reduced delay
+          delay: ctaDelay,    // Adjusted delay based on device
           ease: "backOut" // Easing that creates a slight overshoot and bounce-back effect
         }
       );
@@ -66,7 +86,7 @@ const Hero = () => {
     // Cleanup function - runs when component unmounts
     // This prevents memory leaks by cleaning up animations
     return () => ctx.revert();
-  }, []); // Empty dependency array means this effect runs only once (on mount)
+  }, [isMobile]); // Include isMobile in dependency array
 
   // Function to handle smooth scrolling to the works section
   // This is called when the "View My Work" button is clicked
@@ -74,15 +94,15 @@ const Hero = () => {
     // Find the element with id="works" in the document
     const element = document.querySelector('#works');
 
-    // If the element exists, scroll to it
-    // Lenis handles the smooth scrolling automatically
-    element?.scrollIntoView();
+    // If the element exists, scroll to it smoothly
+    element?.scrollIntoView({ behavior: 'smooth' });
   };
 
   // Return the JSX structure of our Hero component
   return (
     // Main container for the hero section
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+    <SectionObserver sectionId="home">
+      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
 
       {/* ===== BACKGROUND SECTION ===== */}
       {/* Absolute positioned container for all background effects */}
@@ -96,7 +116,7 @@ const Hero = () => {
           muted          // Mute the video (required for autoplay in most browsers)
           playsInline    // Play video inline (instead of fullscreen) on iOS devices
           className="absolute inset-0 w-full h-full object-cover" // CSS to cover entire background
-          src="/video bg.mp4" // Path to the video file in the public folder
+          src="/video bg.webm" // Path to the video file in the public folder
         />
 
         {/* ===== VIDEO OVERLAY ===== */}
@@ -138,11 +158,11 @@ const Hero = () => {
 
         {/* ===== ADDITIONAL BOTTOM GRADIENT FOR SMOOTH TRANSITION ===== */}
         {/* Heavier gradient at the very bottom to create smooth transition to About section */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent" />
 
         {/* ===== EXTRA OVERLAY GRADIENT ===== */}
         {/* Additional gradient layer for smoother transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black via-black/50 to-transparent" />
       </div>
 
       {/* ===== CUSTOM CSS ANIMATIONS ===== */}
@@ -178,48 +198,70 @@ const Hero = () => {
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8">
 
         {/* ===== MAIN HEADING ===== */}
-        {/* Text pressure animation for main heading */}
-        <div ref={headingRef} className="mb-6" style={{position: 'relative', height: '160px', width: '100%'}}>
-          <TextPressure
-            text="BILLYNABIL"
-            flex={true}
-            alpha={false}
-            stroke={false}
-            width={true}
-            weight={true}
-            italic={true}
-            inverted={true}
-            textColor="#ffffff"
-            strokeColor="#ff0000"
-            minFontSize={36}
-            className="mb-6"
-            scale={true}
-          />
+        {/* Conditional rendering: Text pressure for desktop, regular text for mobile */}
+        <div ref={headingRef} className="mb-4 sm:mb-10 w-full" style={{position: 'relative', minHeight: isMobile ? '120px' : '200px', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '20px 0' : '20px 0'}}>
+          {isMobile ? (
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider leading-tight px-4"
+            >
+              BILLYNABIL
+            </motion.h1>
+          ) : (
+            <TextPressure
+              text="BILLYNABIL"
+              flex={true}
+              alpha={false}
+              stroke={false}
+              width={true}
+              weight={true}
+              italic={true}
+              inverted={true}
+              textColor="#ffffff"
+              strokeColor="#ff0000"
+              minFontSize={56}
+              className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold"
+              scale={false}
+            />
+          )}
         </div>
 
         {/* Text pressure animation for commission text */}
-        <div ref={commissionRef} className="mb-6" style={{position: 'relative', height: '160px', width: '100%'}}>
-          <TextPressure
-            text="COMMISSION"
-            flex={true}
-            alpha={false}
-            stroke={false}
-            width={true}
-            weight={true}
-            italic={true}
-            inverted={true}
-            textColor="#bd0000"
-            strokeColor="#ff0000"
-            minFontSize={36}
-            className="mb-6"
-            scale={true}
-          />
+        <div ref={commissionRef} className="mb-8 sm:mb-10 w-full" style={{position: 'relative', minHeight: isMobile ? '60px' : '120px', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '8px 0' : '15px 0'}}>
+          {isMobile ? (
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-red-600 uppercase tracking-wide"
+            >
+              COMMISSION
+            </motion.h2>
+          ) : (
+            <TextPressure
+              text="COMMISSION"
+              flex={true}
+              alpha={false}
+              stroke={false}
+              width={true}
+              weight={true}
+              italic={true}
+              inverted={true}
+              textColor="#c10007"
+              strokeColor="#ff0000"
+              minFontSize={40}
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
+              scale={false}
+            />
+          )}
         </div>
 
         {/* ===== SUBHEADING/DESCRIPTION ===== */}
         <motion.p
           ref={subheadingRef} // GSAP reference for slide-up animation
-          className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto" // Responsive text with max width
+          className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 sm:mb-10 max-w-3xl mx-auto" // Responsive text with max width
         >
           Crafting compelling visual stories through motion graphics,
           animation, and creative design. Transform your ideas into
@@ -233,7 +275,7 @@ const Hero = () => {
         >
           {/* Primary CTA button */}
           <motion.div
-            whileHover={{ scale: 1.1, rotate: [0, -1, 1, 0] }}
+            whileHover={{ scale: 1.1, rotate: 1 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
@@ -242,24 +284,22 @@ const Hero = () => {
               onClick={scrollToWorks} // Call our scroll function when clicked
               className="text-lg px-8 py-3 h-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl hover:shadow-2xl hover:shadow-primary/30" // Enhanced styling with gradient and shadow
             >
-              <span className="mr-2">✨</span>
               View My Work
             </Button>
           </motion.div>
 
           {/* Secondary CTA button */}
           <motion.div
-            whileHover={{ scale: 1.1, rotate: [0, 1, -1, 0] }}
+            whileHover={{ scale: 1.1, rotate: -1 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <Button
               variant="outline" // Outline style (transparent with border)
               size="lg"         // Large button size
-              onClick={() => document.querySelector('#contact')?.scrollIntoView()} // Lenis handles smooth scrolling automatically
+              onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })} // Smooth scrolling to contact section
               className="text-lg px-8 py-3 h-auto border-2 border-white/30 hover:border-white/60 hover:bg-white/10 hover:shadow-xl hover:shadow-white/20 backdrop-blur-sm" // Enhanced glassmorphism effect
             >
-              <span className="mr-2">📧</span>
               Get In Touch
             </Button>
           </motion.div>
@@ -285,6 +325,7 @@ const Hero = () => {
         </div>
       </motion.div>
     </section>
+    </SectionObserver>
   );
 };
 

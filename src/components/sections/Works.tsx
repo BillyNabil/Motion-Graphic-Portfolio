@@ -9,6 +9,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Play, X } from 'lucide-react';
+import SectionObserver from '@/components/ui/SectionObserver';
+import Image from 'next/image';
 
 // Sample portfolio data - replace with actual YouTube video IDs
 const portfolioItems = [
@@ -31,7 +33,7 @@ const portfolioItems = [
     title: "Social Media Campaign",
     description: "Animated social media content series",
     category: "Social Media",
-      videoId: "d3Z_tISZWtk", // Replace with actual YouTube video ID
+      videoId: "MSJxH6uGr5g", // Replace with actual YouTube video ID
   },
   {
     id: 4,
@@ -60,14 +62,14 @@ const categories = ["All", "Logo Animation", "Explainer Video", "Social Media", 
 
 const Works = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const filteredItems = selectedCategory === "All"
     ? portfolioItems
     : portfolioItems.filter(item => item.category === selectedCategory);
 
   return (
-    <section id="works" className="py-20 bg-background">
+    <SectionObserver sectionId="works">
+      <section id="works" className="py-20 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -77,11 +79,11 @@ const Works = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4 relative">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 relative">
             <span className="pressure-text-inverted">MY</span> <span className="text-primary pressure-text-inverted">WORKS</span>
           </h2>
-          
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             Explore my portfolio of motion graphics projects, from logo animations to explainer videos
           </p>
         </motion.div>
@@ -120,10 +122,12 @@ const Works = () => {
             >
               {/* Thumbnail */}
               <div className="aspect-video relative overflow-hidden">
-                <img
+                <Image
                   src={`https://img.youtube.com/vi/${item.videoId}/maxresdefault.jpg`}
                   alt={item.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   onError={(e) => {
                     // Fallback to lower quality if maxresdefault not available
                     const target = e.target as HTMLImageElement;
@@ -132,8 +136,7 @@ const Works = () => {
                 />
 
                 {/* Play button overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center cursor-pointer"
-                     onClick={() => setSelectedVideo(item.videoId)}>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center cursor-pointer">
                   <Dialog>
                     <DialogTrigger asChild>
                       <div className="w-20 h-20 bg-primary/90 hover:bg-primary rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg">
@@ -141,18 +144,6 @@ const Works = () => {
                       </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-6xl w-[90vw] max-h-[85vh] p-6 rounded-lg overflow-hidden">
-                      {/* Close Button */}
-                      <div className="absolute top-6 right-6 z-50">
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-sm"
-                          onClick={() => setSelectedVideo(null)}
-                        >
-                          <X className="w-5 h-5" />
-                        </Button>
-                      </div>
-
                       {/* Video Container - Large but not full screen */}
                       <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
                         <iframe
@@ -200,6 +191,7 @@ const Works = () => {
         </motion.div>
       </div>
     </section>
+    </SectionObserver>
   );
 };
 

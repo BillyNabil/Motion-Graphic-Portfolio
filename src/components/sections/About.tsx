@@ -1,24 +1,39 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import OptimizedVideo from '@/components/ui/optimized-video';
+import SectionObserver from '@/components/ui/SectionObserver';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const About = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
-    <section id="about" className="py-4 pb-16 md:pb-24 lg:pb-32 bg-background relative overflow-hidden">
+    <SectionObserver sectionId="about">
+      <section id="about" className="py-4 pb-16 md:pb-24 lg:pb-32 bg-black relative overflow-hidden">
       {/* ===== TOP GRADIENT FOR SMOOTH TRANSITION ===== */}
-      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-background via-background/95 to-transparent z-10" />
+      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black via-black/95 to-transparent z-10" />
 
       {/* ===== ADDITIONAL TOP OVERLAY ===== */}
-      <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-background via-background/20 to-transparent z-10" />
+      <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-black via-black/20 to-transparent z-10" />
 
   
       {/* ===== BORDER CORNERS ===== */}
-      <div className="absolute top-50 left-12 w-12 h-12 border-t-2 border-l-2 border-primary/50 z-20" />
-      <div className="absolute top-50 right-12 w-12 h-12 border-t-2 border-r-2 border-primary/50 z-20" />
-      <div className="absolute bottom-50 left-12 w-12 h-12 border-b-2 border-l-2 border-primary/50 z-20" />
-      <div className="absolute bottom-50 right-12 w-12 h-12 border-b-2 border-r-2 border-primary/50 z-20" />
+      <div className={`absolute top-10 left-12 ${isMobile ? 'w-8 h-8' : 'w-12 h-12'} border-t-2 border-l-2 border-primary/50 z-20`} />
+      <div className={`absolute top-10 right-12 ${isMobile ? 'w-8 h-8' : 'w-12 h-12'} border-t-2 border-r-2 border-primary/50 z-20`} />
+      <div className={`absolute bottom-20 left-12 ${isMobile ? 'w-8 h-8' : 'w-12 h-12'} border-b-2 border-l-2 border-primary/50 z-20`} />
+      <div className={`absolute bottom-20 right-12 ${isMobile ? 'w-8 h-8' : 'w-12 h-12'} border-b-2 border-r-2 border-primary/50 z-20`} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -73,25 +88,20 @@ const About = () => {
             className="flex justify-center items-center"
           >
             <div className="w-full max-w-md bg-black rounded-2xl shadow-2xl overflow-hidden">
-              <OptimizedVideo
-                src="/dancing evernight.webm"
-                fallbackFormats={{
-                  webm: "/dancing evernight.webm",
-                  mp4: "/Dance Evernight GIF.gif"
-                }}
+              <Image
+                src="/dancing evernight.webp"
                 alt="Dance Evernight Motion Graphics"
+                width={400}
+                height={300}
                 className="w-full h-auto"
-                autoPlay={true}
-                loop={true}
-                muted={true}
-                playsInline={true}
-                controls={false}
+                style={{ objectFit: 'cover' }}
               />
             </div>
           </motion.div>
         </div>
       </div>
     </section>
+    </SectionObserver>
   );
 };
 

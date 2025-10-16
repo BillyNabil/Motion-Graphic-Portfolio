@@ -1,20 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import SectionObserver from '@/components/ui/SectionObserver';
 
 const pricingServices = [
-  {
-    service: "Simple Music Video",
-    price: "$70",
-    description: "Basic music video with simple animations and effects",
-    features: ["Basic animations", "Standard transitions", "Text overlays", "HD quality"]
-  },
-  {
-    service: "Complex Music Video",
-    price: "$140",
-    description: "Advanced music video with complex animations and custom effects",
-    features: ["Advanced animations", "Custom effects", "Complex transitions", "4K quality", "Color grading"]
-  },
   {
     service: "Stream Overlay (Static)",
     price: "$15",
@@ -34,16 +23,28 @@ const pricingServices = [
     features: ["Custom animation", "Sound design", "Brand integration", "Multiple formats"]
   },
   {
+    service: "Animated Logo",
+    price: "$40",
+    description: "Professional logo animation for branding",
+    features: ["Custom animation", "Brand colors", "Multiple formats", "Source files"]
+  },
+  {
     service: "Trailer (Debut / Lore)",
     price: "$50",
     description: "Professional trailer for debut or lore videos",
     features: ["Cinematic effects", "Text animations", "Sound design", "HD quality"]
   },
   {
-    service: "Animated Logo",
-    price: "$40",
-    description: "Professional logo animation for branding",
-    features: ["Custom animation", "Brand colors", "Multiple formats", "Source files"]
+    service: "Simple Music Video",
+    price: "$70",
+    description: "Basic music video with simple animations and effects",
+    features: ["Basic animations", "Standard transitions", "Text overlays", "HD quality"]
+  },
+  {
+    service: "Complex Music Video",
+    price: "$140",
+    description: "Advanced music video with complex animations and custom effects",
+    features: ["Advanced animations", "Custom effects", "Complex transitions", "4K quality", "Color grading"]
   }
 ];
 
@@ -122,7 +123,8 @@ const ServiceCard = ({ service, index }: { service: typeof pricingServices[0]; i
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-24 min-h-screen relative overflow-hidden bg-black">
+    <SectionObserver sectionId="pricing">
+      <section id="pricing" className="py-24 min-h-screen relative overflow-hidden bg-black">
       {/* Background elements */}
       <div className="absolute inset-0 bg-black">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
@@ -142,10 +144,10 @@ const Pricing = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6">
-            Pricing
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 uppercase">
+            PRICING
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
             Professional motion graphics services at competitive prices
           </p>
         </motion.div>
@@ -191,6 +193,7 @@ const Pricing = () => {
         </motion.div>
       </div>
     </section>
+    </SectionObserver>
   );
 };
 

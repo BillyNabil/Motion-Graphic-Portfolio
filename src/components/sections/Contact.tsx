@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import OptimizedImage from '@/components/ui/optimized-image';
+import SectionObserver from '@/components/ui/SectionObserver';
 
 const socialLinks = [
   {
@@ -50,7 +51,8 @@ const socialLinks = [
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-20 bg-background">
+    <SectionObserver sectionId="contact">
+      <section id="contact" className="py-20 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -60,11 +62,11 @@ const Contact = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Let&apos;s Create <span className="text-primary">Something</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
+            LET'S CREATE <span className="text-primary">SOMETHING</span>
           </h2>
-          <div className="w-20 h-1 bg-primary mx-auto rounded-full mb-8" />
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
+          <div className="w-16 sm:w-20 h-1 bg-primary mx-auto rounded-full mb-6 sm:mb-8" />
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-12">
             Ready to bring your ideas to life through motion graphics?
             Let&apos;s collaborate and create something amazing together.
           </p>
@@ -115,31 +117,9 @@ const Contact = () => {
 
         </div>
 
-      {/* Footer */}
-      <footer className="mt-20 py-8 bg-muted/30 border-t">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <p className="text-foreground font-semibold text-lg">
-                billynabil
-              </p>
-              <p className="text-muted-foreground text-sm">
-                Motion Graphics Designer
-              </p>
-            </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-muted-foreground text-sm">
-                © 2024 Billynabil. All rights reserved.
-              </p>
-              <p className="text-muted-foreground text-xs mt-1">
-                Built with Next.js, React, and lots of ☕
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
+    
     </section>
+    </SectionObserver>
   );
 };
 

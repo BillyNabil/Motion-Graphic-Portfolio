@@ -23,6 +23,7 @@
     "next": "15.5.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-intersection-observer": "^9.16.0",
     "smoothscroll-polyfill": "^0.4.4",
     "tailwind-merge": "^3.3.1"
   },
@@ -36,5 +37,10 @@
     "eslint-config-next": "15.5.5",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "A stunning, high-performance portfolio website for Billynabil, a Motion Graphics Designer, built with Next.js 14, TypeScript, and modern web technologies.",
+  "main": "test-browser-compatibility.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
