@@ -9,8 +9,10 @@ interface LoadingScreenProps {
 
 const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
+
+  // Hanya gunakan load screen.gif untuk initial load dan refresh
+  const loadingGif = '/load screen.gif';
 
   useEffect(() => {
     setMounted(true);
@@ -19,30 +21,21 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
   useEffect(() => {
     if (!mounted) return;
 
-    // Optimized loading simulation
-    const duration = 1500; // Reduced from 2s to 1.5s
-    const steps = 30; // Reduced steps
-    const increment = 100 / steps;
+    // Load dan detect GIF duration
+    const img = new Image();
+    img.onload = () => {
+      // Set timer untuk 4 detik (durasi GIF)
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        onComplete?.();
+      }, 4000);
 
-    let currentStep = 0;
-    const timer = setInterval(() => {
-      currentStep++;
-      const newProgress = Math.min(100, currentStep * increment);
-      setProgress(newProgress);
-      if (newProgress >= 100) {
-        clearInterval(timer);
-        // Reduced delay before hiding
-        setTimeout(() => {
-          setIsLoading(false);
-          onComplete?.();
-        }, 200);
-      }
-    }, duration / steps);
+      return () => clearTimeout(timer);
+    };
+    img.src = loadingGif;
 
-    return () => clearInterval(timer);
   }, [mounted, onComplete]);
 
-  
   if (!mounted) return null;
 
   return (
@@ -51,103 +44,32 @@ const LoadingScreenOptimized = ({ onComplete }: LoadingScreenProps) => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="fixed inset-0 top-0 left-0 w-screen h-screen z-[9999] flex items-center justify-center bg-black overflow-hidden"
         >
-          
-          {/* Main loading content */}
-          <div className="relative z-10 text-center px-4">
-            
-            {/* Simplified text animation - no character-by-character */}
-            <div className="space-y-3">
-              <motion.h1
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="text-3xl sm:text-4xl md:text-5xl font-bold text-white italic"
-              >
-                BILLYNABIL
-              </motion.h1>
-
-              <motion.h2
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-2xl sm:text-3xl md:text-4xl font-bold text-red-500 italic"
-              >
-                COMMISSION
-              </motion.h2>
-
-              {/* Simplified tagline */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="text-sm sm:text-base text-gray-400 max-w-md mx-auto italic"
-              >
-                Motion Graphics Designer
-              </motion.p>
-            </div>
-
-            {/* Simplified progress bar */}
-            <motion.div
+          {/* Loading GIF Container - Full Screen */}
+          <div className="relative w-screen h-screen flex items-center justify-center overflow-hidden">
+            <motion.img
+              src={loadingGif}
+              alt="Loading"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.6 }}
-              className="mt-8 max-w-xs mx-auto"
-            >
-              <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-red-500 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeOut"
-                  }}
-                />
-              </div>
-              <div className="mt-2 text-xs text-gray-400">
-                Loading... {Math.round(progress)}%
-              </div>
-            </motion.div>
-
-            {/* Simple CSS dots animation instead of Framer Motion */}
-            <div className="mt-6 flex justify-center space-x-1">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="w-2 h-2 bg-red-500 rounded-full"
-                  style={{
-                    animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite`,
-                  }}
-                />
-              ))}
-            </div>
+              transition={{ duration: 0.4 }}
+              className="absolute w-full h-full object-cover"
+              style={{
+                animation: 'none', // GIF handles its own loop
+              }}
+            />
           </div>
 
-          {/* CSS Animation Styles */}
-          <style jsx>{`
-            @keyframes pulse {
-              0%, 80%, 100% {
-                opacity: 0.3;
-                transform: scale(0.8);
-              }
-              40% {
-                opacity: 1;
-                transform: scale(1.2);
-              }
-            }
-
-            /* Reduce animations on low-end devices */
-            @media (prefers-reduced-motion: reduce) {
-              * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-              }
-            }
-          `}</style>
+          {/* Single Progress Indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <motion.div
+              className="h-1 w-8 rounded-full bg-white"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+            />
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

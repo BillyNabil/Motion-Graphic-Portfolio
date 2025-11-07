@@ -1,7 +1,7 @@
 'use client'; // This directive tells Next.js to render this component on the client-side
 
 // Import React hooks for managing references and side effects
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 // Import Framer Motion for smooth animations
 import { motion } from 'framer-motion';
 // Import the custom Button component from our UI library
@@ -22,6 +22,7 @@ gsap.registerPlugin(ScrollTrigger);
 const Hero = () => {
   // State to detect mobile screen size
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Create references to DOM elements that we want to animate
   // useRef lets us directly access and manipulate DOM elements
@@ -30,15 +31,27 @@ const Hero = () => {
   const subheadingRef = useRef<HTMLParagraphElement>(null); // Reference to the subtitle
   const ctaRef = useRef<HTMLDivElement>(null); // Reference to the call-to-action buttons
 
-  // Detect mobile screen size
+  // Detect mobile screen size with debouncing to prevent excessive re-renders
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768); // md breakpoint
     };
 
+    const debouncedResize = () => {
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      resizeTimeoutRef.current = setTimeout(checkMobile, 150); // Debounce resize events
+    };
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener('resize', debouncedResize);
+    return () => {
+      window.removeEventListener('resize', debouncedResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+    };
   }, []);
 
   // useEffect hook runs after component mounts - perfect for animations
@@ -98,6 +111,72 @@ const Hero = () => {
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Memoize the heading content to prevent unnecessary re-renders
+  const headingContent = useMemo(() => {
+    if (isMobile) {
+      return (
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider leading-tight px-4"
+        >
+          BILLYNABIL
+        </motion.h1>
+      );
+    }
+    return (
+      <TextPressure
+        text="BILLYNABIL"
+        flex={true}
+        alpha={false}
+        stroke={false}
+        width={true}
+        weight={true}
+        italic={true}
+        inverted={true}
+        textColor="#ffffff"
+        strokeColor="#ff0000"
+        minFontSize={56}
+        className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold"
+        scale={false}
+      />
+    );
+  }, [isMobile]);
+
+  // Memoize the commission content to prevent unnecessary re-renders
+  const commissionContent = useMemo(() => {
+    if (isMobile) {
+      return (
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-2xl md:text-3xl lg:text-4xl font-bold text-red-600 uppercase tracking-wide"
+        >
+          COMMISSION
+        </motion.h2>
+      );
+    }
+    return (
+      <TextPressure
+        text="COMMISSION"
+        flex={true}
+        alpha={false}
+        stroke={false}
+        width={true}
+        weight={true}
+        italic={true}
+        inverted={true}
+        textColor="#c10007"
+        strokeColor="#ff0000"
+        minFontSize={40}
+        className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
+        scale={false}
+      />
+    );
+  }, [isMobile]);
+
   // Return the JSX structure of our Hero component
   return (
     // Main container for the hero section
@@ -130,7 +209,7 @@ const Hero = () => {
 
           {/* Primary halftone layer - smaller dots, faster movement */}
           <div
-            className="absolute inset-0 opacity-10" // 20% opacity for subtle effect
+            className="absolute inset-0 opacity-10 will-change-transform" // Added will-change for GPU acceleration
             style={{
               // Create a dot pattern using radial gradients
               backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`,
@@ -142,7 +221,7 @@ const Hero = () => {
 
           {/* Secondary halftone layer - larger dots, slower movement for depth */}
           <div
-            className="absolute inset-0 opacity-15" // Slightly more transparent than primary layer
+            className="absolute inset-0 opacity-15 will-change-transform" // Added will-change for GPU acceleration
             style={{
               backgroundImage: `radial-gradient(circle, white 0.8px, transparent 0.8px)`,
               backgroundSize: '12px 12px',     // Larger spacing between dots
@@ -200,62 +279,12 @@ const Hero = () => {
         {/* ===== MAIN HEADING ===== */}
         {/* Conditional rendering: Text pressure for desktop, regular text for mobile */}
         <div ref={headingRef} className="mb-4 sm:mb-10 w-full" style={{position: 'relative', minHeight: isMobile ? '120px' : '200px', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '20px 0' : '20px 0'}}>
-          {isMobile ? (
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider leading-tight px-4"
-            >
-              BILLYNABIL
-            </motion.h1>
-          ) : (
-            <TextPressure
-              text="BILLYNABIL"
-              flex={true}
-              alpha={false}
-              stroke={false}
-              width={true}
-              weight={true}
-              italic={true}
-              inverted={true}
-              textColor="#ffffff"
-              strokeColor="#ff0000"
-              minFontSize={56}
-              className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold"
-              scale={false}
-            />
-          )}
+          {headingContent}
         </div>
 
         {/* Text pressure animation for commission text */}
         <div ref={commissionRef} className="mb-8 sm:mb-10 w-full" style={{position: 'relative', minHeight: isMobile ? '60px' : '120px', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '8px 0' : '15px 0'}}>
-          {isMobile ? (
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-bold text-red-600 uppercase tracking-wide"
-            >
-              COMMISSION
-            </motion.h2>
-          ) : (
-            <TextPressure
-              text="COMMISSION"
-              flex={true}
-              alpha={false}
-              stroke={false}
-              width={true}
-              weight={true}
-              italic={true}
-              inverted={true}
-              textColor="#c10007"
-              strokeColor="#ff0000"
-              minFontSize={40}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
-              scale={false}
-            />
-          )}
+          {commissionContent}
         </div>
 
         {/* ===== SUBHEADING/DESCRIPTION ===== */}

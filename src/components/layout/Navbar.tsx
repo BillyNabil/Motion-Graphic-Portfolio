@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Menu } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Menu, Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { motion } from 'framer-motion';
@@ -16,6 +17,7 @@ const navItems = [
 ];
 
 const Navbar = () => {
+  const router = useRouter();
   const { activeSection } = useActiveSection();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -62,8 +64,25 @@ const Navbar = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50"
+          className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-4"
         >
+        {/* Coding Projects Button - Top Left */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <Button
+            onClick={() => router.push('/coding-projects')}
+            variant="ghost"
+            size="icon"
+            className="rounded-full border-2 border-black text bg-black hover:bg-black hover:text-white transition-colors duration-200"
+            title="View Coding Projects"
+          >
+            <Code2 className="h-5 w-5" />
+          </Button>
+        </motion.div>
+
       {/* Desktop Navigation - Slide Tabs */}
       <div className="hidden md:block">
         <motion.div

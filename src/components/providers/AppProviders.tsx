@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { LoadingProvider, useLoading } from '@/contexts/loading-context';
 import LoadingScreenOptimized from '@/components/ui/loading-screen-optimized';
+import BottomLoadingBarSimple from '@/components/ui/bottom-loading-bar-simple';
 import PerformanceProvider from '@/components/providers/PerformanceProvider';
 import BrowserCompatibilityProvider from '@/components/providers/BrowserCompatibilityProvider';
 import { ActiveSectionProvider } from '@/contexts/ActiveSectionContext';
@@ -18,6 +19,7 @@ const AppContent = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <LoadingScreenOptimized onComplete={setInitialLoadComplete} />
+      <BottomLoadingBarSimple isLoading={isInitialLoad} duration={4000} />
       {!isInitialLoad && (
         <div className="min-h-screen">
           {children}

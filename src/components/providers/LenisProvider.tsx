@@ -1,9 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 
 const LenisProvider = ({ children }: { children: React.ReactNode }) => {
+  const lenisRef = useRef<Lenis | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const isVisibleRef = useRef(true);
+
   useEffect(() => {
     // Check if browser supports smooth scrolling and Lenis
     const browserInfo = (window as { __browserInfo?: {
@@ -16,7 +20,7 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (shouldUseLenis) {
       try {
-        // Initialize Lenis
+        // Initialize Lenis with optimized settings
         const lenis = new Lenis({
           smoothWheel: true,
           lerp: 0.1,
@@ -31,20 +35,37 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
           anchors: false,
           autoResize: true,
           overscroll: true,
-          autoRaf: false,
+          autoRaf: false, // We handle RAF manually
         });
 
-        // Use requestAnimationFrame to continuously update the scroll
-        function raf(time: number) {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
-        }
+        lenisRef.current = lenis;
 
-        requestAnimationFrame(raf);
+        // Use requestAnimationFrame to continuously update the scroll
+        const raf = (time: number) => {
+          // Only update if page is visible (prevents unnecessary processing)
+          if (isVisibleRef.current) {
+            lenis.raf(time);
+          }
+          rafIdRef.current = requestAnimationFrame(raf);
+        };
+
+        rafIdRef.current = requestAnimationFrame(raf);
+
+        // Handle page visibility to pause RAF when tab is not active
+        const handleVisibilityChange = () => {
+          isVisibleRef.current = document.visibilityState === 'visible';
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
 
         // Cleanup on unmount
         return () => {
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+          if (rafIdRef.current !== null) {
+            cancelAnimationFrame(rafIdRef.current);
+          }
           lenis.destroy();
+          lenisRef.current = null;
         };
       } catch (error) {
         console.warn('Lenis failed to initialize, falling back to native smooth scrolling:', error);
@@ -84,12 +105,15 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
         // Override smooth scroll behavior for anchor links
         document.addEventListener('click', (e) => {
           const target = e.target as HTMLElement;
-          const anchor = target.closest('a[href^="#"]');
-          if (anchor) {
-            e.preventDefault();
-            const targetElement = document.querySelector(anchor.getAttribute('href')!);
-            if (targetElement) {
-              smoothScroll(document.documentElement, targetElement.getBoundingClientRect().top + window.pageYOffset, 800);
+          // Check if target is an Element before calling closest()
+          if (target && target instanceof Element) {
+            const anchor = target.closest('a[href^="#"]') as HTMLAnchorElement | null;
+            if (anchor) {
+              e.preventDefault();
+              const targetElement = document.querySelector(anchor.getAttribute('href')!);
+              if (targetElement) {
+                smoothScroll(document.documentElement, targetElement.getBoundingClientRect().top + window.pageYOffset, 800);
+              }
             }
           }
         });

@@ -67,36 +67,33 @@ const PerformanceProvider = ({ children }: PerformanceProviderProps) => {
     root.classList.add(`device-${deviceType}`);
   }, [deviceType, prefersReducedMotion]);
 
-  // Optimized memory management
+  // Optimized memory management with throttling
   useEffect(() => {
     // Skip performance monitoring on mobile to save resources
     if (deviceType === 'mobile') return;
 
-    // Cleanup function for heavy animations
-    const cleanupHeavyAnimations = () => {
-      const heavyElements = document.querySelectorAll('[data-heavy-animation]');
-      heavyElements.forEach(el => {
-        el.removeAttribute('data-heavy-animation');
-      });
-    };
-
     let animationFrameId: number;
     let frameCount = 0;
     let lastTime = performance.now();
+    let lastCheckTime = performance.now();
+    const CHECK_INTERVAL = 3000; // Check every 3 seconds instead of 2
 
     const checkPerformance = () => {
       frameCount++;
       const currentTime = performance.now();
 
-      if (currentTime - lastTime >= 2000) { // Check every 2 seconds instead of 1
-        const fps = frameCount / 2; // Average FPS over 2 seconds
+      // Only check FPS every CHECK_INTERVAL ms
+      if (currentTime - lastCheckTime >= CHECK_INTERVAL) {
+        const fps = (frameCount / (currentTime - lastTime)) * 1000; // Calculate actual FPS
         frameCount = 0;
         lastTime = currentTime;
+        lastCheckTime = currentTime;
 
-        // Reduce animations if performance is poor
-        if (fps < 25) { // Lower threshold from 30 to 25
+        // Reduce animations if performance is poor (threshold: 30 FPS)
+        if (fps < 30) {
           document.documentElement.classList.add('reduce-motion');
-        } else if (fps > 45) {
+        } else if (fps > 50) {
+          // Only remove if we're well above threshold
           document.documentElement.classList.remove('reduce-motion');
         }
       }
@@ -104,16 +101,15 @@ const PerformanceProvider = ({ children }: PerformanceProviderProps) => {
       animationFrameId = requestAnimationFrame(checkPerformance);
     };
 
-    // Throttled performance monitoring
+    // Start monitoring after page has settled (5 seconds)
     const monitorTimer = setTimeout(() => {
       animationFrameId = requestAnimationFrame(checkPerformance);
-    }, 3000); // Start monitoring after 3 seconds
+    }, 5000);
 
     // Cleanup on unmount
     return () => {
       clearTimeout(monitorTimer);
       cancelAnimationFrame(animationFrameId);
-      cleanupHeavyAnimations();
     };
   }, [deviceType]);
 
