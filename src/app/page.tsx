@@ -1,10 +1,10 @@
 import Navbar from '@/components/layout/Navbar';
 import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
-import InfiniteLogoScroller from '@/components/sections/InfiniteLogoScroller';
-import ParallaxShowcase from '@/components/sections/ParallaxShowcase';
+import ShowcaseArsenal from '@/components/sections/ShowcaseArsenal';
 import Works from '@/components/sections/Works';
 import Pricing from '@/components/sections/Pricing';
+import Terms from '@/components/sections/Terms';
 import Contact from '@/components/sections/Contact';
 import Footer from '@/components/layout/Footer';
 
@@ -14,10 +14,10 @@ export default function Home() {
       <Navbar />
       <Hero />
       <About />
-      <InfiniteLogoScroller />
-      <ParallaxShowcase />
+      <ShowcaseArsenal />
       <Works />
       <Pricing />
+      <Terms />
       <Contact />
       <Footer />
     </main>

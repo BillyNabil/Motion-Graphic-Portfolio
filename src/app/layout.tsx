@@ -1,14 +1,26 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Syne, Manrope, Oswald } from "next/font/google"; // Added Oswald
 import LenisProvider from "@/components/providers/LenisProvider";
 import { AppProviders } from "@/components/providers/AppProviders";
+import GrainOverlay from "@/components/ui/GrainOverlay";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const oswald = Oswald({
+  variable: "--font-oswald",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -68,13 +80,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning={true}>
       <body
-        className={`${poppins.variable} antialiased bg-black text-white`}
+        className={`${syne.variable} ${manrope.variable} ${oswald.variable} antialiased bg-black text-white font-sans`}
         suppressHydrationWarning={true}
       >
         <AppProviders>
           <LenisProvider>
+            <GrainOverlay />
             {children}
           </LenisProvider>
         </AppProviders>

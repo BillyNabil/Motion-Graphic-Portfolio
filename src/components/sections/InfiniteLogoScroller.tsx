@@ -1,99 +1,79 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import OptimizedImage from '@/components/ui/optimized-image';
 import { useEffect, useState } from 'react';
 
+const SharpStar = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M12 0L14 11L24 12L14 13L12 24L10 13L0 12L10 11Z" />
+  </svg>
+);
+
 const adobeTools = [
-  {
-    name: 'AFTER EFFECTS',
-    type: 'text' as const
-  },
-  {
-    name: 'star',
-    type: 'icon' as const,
-    icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
-  },
-  {
-    name: 'PREMIERE PRO',
-    type: 'text' as const
-  },
-  {
-    name: 'star',
-    type: 'icon' as const,
-    icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
-  },
-  {
-    name: 'PHOTOSHOP',
-    type: 'text' as const
-  },
-  {
-    name: 'star',
-    type: 'icon' as const,
-    icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
-  },
-  {
-    name: 'ILLUSTRATOR',
-    type: 'text' as const
-  },
-  {
-    name: 'star',
-    type: 'icon' as const,
-    icon: '/973-9737225_black-4-point-star-four-pointed-star.png'
-  },
+  { name: 'AFTER EFFECTS', type: 'text' as const },
+  { name: 'separator', type: 'icon' as const },
+  { name: 'PREMIERE PRO', type: 'text' as const },
+  { name: 'separator', type: 'icon' as const },
+  { name: 'CINEMA 4D', type: 'text' as const },
+  { name: 'separator', type: 'icon' as const },
+  { name: 'BLENDER', type: 'text' as const },
+  { name: 'separator', type: 'icon' as const },
+  { name: 'FIGMA', type: 'text' as const },
+  { name: 'separator', type: 'icon' as const },
+  { name: 'ILLUSTRATOR', type: 'text' as const },
+  { name: 'separator', type: 'icon' as const },
 ];
 
-const LogoItem = ({ logo, isMobile }: { logo: { name: string; type: 'text' | 'icon'; icon?: string }, isMobile: boolean }) => {
+const LogoItem = ({ logo, isMobile, outlined = false }: { logo: { name: string; type: 'text' | 'icon' }, isMobile: boolean, outlined?: boolean }) => {
+  if (logo.type === 'icon') {
+    return (
+      <div className="flex items-center justify-center px-4 md:px-8">
+        <SharpStar className={`w-8 h-8 md:w-12 md:h-12 ${outlined ? 'text-white' : 'text-primary'} animate-pulse`} />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center px-8">
-      {logo.type === 'text' ? (
-        <div className={`text-black font-black whitespace-nowrap ${isMobile ? 'text-2xl' : 'text-6xl'}`}>
-          {logo.name}
-        </div>
-      ) : (
-        <div className={`flex items-center justify-center ${isMobile ? 'w-12 h-12' : 'w-20 h-20'}`}>
-          <OptimizedImage
-            src={logo.icon!}
-            alt={logo.name}
-            className="w-full h-full object-contain"
-            width={isMobile ? 48 : 80}
-            height={isMobile ? 48 : 80}
-          />
-        </div>
-      )}
+    <div className="flex items-center justify-center px-4 md:px-8">
+      <span className={`
+        font-display font-bold whitespace-nowrap tracking-tighter
+        ${isMobile ? 'text-3xl' : 'text-7xl'}
+        ${outlined ? 'text-transparent text-stroke-thick' : 'text-white'}
+      `}>
+        {logo.name}
+      </span>
     </div>
   );
 };
 
-const Ribbon = ({ logos, direction, delay, isMobile }: {
-  logos: { name: string; type: 'text' | 'icon'; icon?: string }[],
+const Ribbon = ({ logos, direction, delay = 0, isMobile, outlined = false }: {
+  logos: typeof adobeTools,
   direction: 'left' | 'right',
   delay?: number,
-  isMobile: boolean
+  isMobile: boolean,
+  outlined?: boolean
 }) => {
-  // Create many copies for completely seamless loop
-  const duplicatedLogos = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
+  const duplicatedLogos = [...logos, ...logos, ...logos, ...logos];
 
   return (
     <motion.div
       className="flex items-center"
+      initial={{ x: direction === 'left' ? 0 : -1000 }}
       animate={{
-        x: direction === 'left'
-          ? [0, -(logos.length * (isMobile ? 100 : 200))] // Adjust spacing for mobile
-          : [-(logos.length * (isMobile ? 100 : 200)), 0],
+        x: direction === 'left' ? "-50%" : "0%",
       }}
       transition={{
         x: {
           repeat: Infinity,
           repeatType: "loop",
-          duration: isMobile ? 15 : 20, // Faster animation on mobile
+          duration: isMobile ? 30 : 60,
           ease: "linear",
-          delay: delay || 0,
+          delay: delay,
         },
       }}
     >
       {duplicatedLogos.map((logo, index) => (
-        <LogoItem key={`${logo.name}-${index}`} logo={logo} isMobile={isMobile} />
+        <LogoItem key={`${logo.name}-${index}`} logo={logo} isMobile={isMobile} outlined={outlined} />
       ))}
     </motion.div>
   );
@@ -102,84 +82,73 @@ const Ribbon = ({ logos, direction, delay, isMobile }: {
 const InfiniteLogoScroller = () => {
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile screen size
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md breakpoint
-    };
-
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   return (
-    <section id="skills" className="bg-black py-20 relative overflow-hidden">
-      {/* Section Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="text-center mb-16 relative z-20"
-      >
-        <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4"><span className="text-red-700">CREATIVE SKILLS</span>
-        </h2>
-      </motion.div>
+    <section className="bg-black py-32 relative overflow-hidden min-h-[80vh] flex flex-col items-center justify-center">
 
-      {/* X-Shaped Ribbons Container - Desktop */}
-      {!isMobile && (
-        <div className="relative w-full h-96 flex items-center justify-center">
-          {/* First Ribbon - Diagonal from top-left to bottom-right */}
-          <div className="absolute w-full h-32 bg-white flex items-center overflow-hidden shadow-2xl"
-               style={{
-                 transform: 'rotate(-25deg) translateY(-100px)',
-                 transformOrigin: 'center',
-                 width: '200%',
-                 left: '-50%'
-               }}>
-            <Ribbon logos={adobeTools} direction="left" isMobile={false} />
-          </div>
+      {/* Background Noise */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
-          {/* Second Ribbon - Diagonal from top-right to bottom-left */}
-          <div className="absolute w-full h-32 bg-white flex items-center overflow-hidden shadow-2xl"
-               style={{
-                 transform: 'rotate(25deg) translateY(100px)',
-                 transformOrigin: 'center',
-                 width: '200%',
-                 left: '-50%'
-               }}>
-            <Ribbon logos={adobeTools} direction="right" delay={0.5} isMobile={false} />
+      {/* Central Header */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 text-center pointer-events-none">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2 text-primary drop-shadow-md">
+            {/* System Capabilities Removed */}
           </div>
+          <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase leading-none drop-shadow-[0_0_20px_rgba(0,0,0,1)]">
+            Creative<br />Arsenal
+          </h2>
         </div>
-      )}
-
-      {/* Horizontal Ribbons Container - Mobile */}
-      {isMobile && (
-        <div className="relative w-full flex flex-col gap-8 px-4">
-          {/* First Ribbon - Horizontal */}
-          <div className="w-full h-16 bg-white flex items-center overflow-hidden shadow-xl rounded-lg">
-            <Ribbon logos={adobeTools} direction="left" isMobile={true} />
-          </div>
-
-          {/* Second Ribbon - Horizontal */}
-          <div className="w-full h-16 bg-white flex items-center overflow-hidden shadow-xl rounded-lg">
-            <Ribbon logos={adobeTools} direction="right" delay={0.5} isMobile={true} />
-          </div>
-        </div>
-      )}
-
-      {/* Gradient Masks for fade effect at edges */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <div className="absolute left-0 top-0 bottom-0 w-64 bg-gradient-to-r from-black via-black/50 to-transparent" />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-black via-black/50 to-transparent" />
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black via-black/50 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent" />
       </div>
 
-      {/* Border Strokes for top and bottom edges */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white to-transparent z-30" />
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white to-transparent z-30" />
+      {/* Desktop X-Layout */}
+      {!isMobile && (
+        <div className="relative w-full h-[600px] flex items-center justify-center scale-110">
+
+          {/* Ribbon 1: Filled */}
+          <div
+            className="absolute w-[150%] bg-white/5 border-y border-white/10 backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.5)] z-10"
+            style={{ transform: 'rotate(-15deg)' }}
+          >
+            <div className="py-6">
+              <Ribbon logos={adobeTools} direction="left" isMobile={false} />
+            </div>
+          </div>
+
+          {/* Ribbon 2: Outlined */}
+          <div
+            className="absolute w-[150%] bg-black/40 border-y border-white/10 backdrop-blur-sm shadow-2xl z-20"
+            style={{ transform: 'rotate(15deg)' }}
+          >
+            <div className="py-6">
+              <Ribbon logos={adobeTools} direction="right" isMobile={false} outlined={true} />
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* Mobile Stack Layout */}
+      {isMobile && (
+        <div className="relative w-full flex flex-col gap-12 py-12">
+          <div className="w-full bg-white/5 border-y border-white/10 backdrop-blur-sm py-4">
+            <Ribbon logos={adobeTools} direction="left" isMobile={true} />
+          </div>
+          <div className="w-full bg-black/40 border-y border-white/10 backdrop-blur-sm py-4">
+            <Ribbon logos={adobeTools} direction="right" isMobile={true} outlined={true} />
+          </div>
+        </div>
+      )}
+
+      {/* Vignette */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,black_100%)]" />
+
     </section>
   );
 };
