@@ -37,52 +37,21 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Webpack configuration for browser compatibility
-  webpack: (config, { isServer }) => {
-    // Add polyfills for older browsers
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      };
-    }
-
-    // Optimize for older browsers
-    config.module.rules.push({
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            ['@babel/preset-env', {
-              targets: {
-                browsers: ['> 1%', 'last 2 versions', 'not ie <= 11']
-              },
-              useBuiltIns: 'usage',
-              corejs: 3,
-            }],
-          ],
-        },
-      },
-    });
-
-    return config;
-  },
-
   // Image optimization for different browsers
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    domains: ['img.youtube.com'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'img.youtube.com',
         pathname: '/vi/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unavatar.io',
+        pathname: '/**',
       },
     ],
   },
@@ -103,3 +72,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
